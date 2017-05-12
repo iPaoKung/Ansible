@@ -1,0 +1,6 @@
+---
+- name: Install WordPress
+  hosts: MyServer
+  tasks:
+    - name: Hello World
+      command: echo "Hello World"
