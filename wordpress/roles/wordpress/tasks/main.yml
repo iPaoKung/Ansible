@@ -1,0 +1,5 @@
+---
+  - name: Install Apache2
+    apt:
+      name: php5
+      update_cache: yes

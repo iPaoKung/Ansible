@@ -4,3 +4,5 @@
   tasks:
     - name: Hello World
       command: echo "Hello World"
+  roles:
+    - wordpress
