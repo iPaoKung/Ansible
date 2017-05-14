@@ -1,6 +1,7 @@
 ---
 - name: Install WordPress
   hosts: MyServer
+  become: yes
   tasks:
     - name: Hello World
       command: echo "Hello World"
