@@ -1,0 +1,10 @@
+---
+  - name: Install PHP5 + Apache
+    become: yes
+    apt:
+#      name: php5
+      name: "{{ item }}"
+    with_items: 
+        - php5
+        - php5-mysql 
+    notify: Restart Apache2 Service

@@ -1,0 +1,12 @@
+---
+  - name: Download Wordpress
+    get_url:
+      url: 'https://wordpress.org/latest.tar.gz'
+      dest: /var/www/html/wordpress.tar.gz
+  - name: Extract Wordpress File
+    unarchive:
+      src: /var/www/html/wordpress.tar.gz
+      dest: /var/www/html/
+      copy: no #no copy file from server ansible
+      owner: www-data
+      group: www-data

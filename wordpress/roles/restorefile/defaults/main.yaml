@@ -1,0 +1,3 @@
+wordpress_user: wordpress_user
+wordpress_owner_user: www-data
+wordpress_owner_group: www-data

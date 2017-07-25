@@ -1,8 +1,0 @@
----
-  - name: Add package php5.6 for ubuntu
-    apt_repository:
-      repo: ppa:ondrej/php
-  - name: Install Apache2
-    apt:
-      name: php5.6
-      update_cache: yes

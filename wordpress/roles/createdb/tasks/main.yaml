@@ -1,0 +1,10 @@
+---
+  - name: Create Database Instance
+    mysql_db:
+     name: wordpress
+
+  - name: Create Wordpress User for Database
+    mysql_user:
+     name: wordpress_user
+     password: wordpress_passwd
+     priv: "wordpress.*:ALL"

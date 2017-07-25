@@ -1,0 +1,12 @@
+---
+  - name: Backup Database
+    mysql_db:
+      state: dump
+      name: all
+      target: /tmp/wordpress.sql
+
+  - name: Copy Backup from remote to ansible server
+    fetch:
+      src: /tmp/wordpress.sql
+      dest: ./files/wordpress.sql
+      flat: yes

@@ -1,0 +1,3 @@
+wordpressxuser: wordpress_user
+wordpress_owner_user: root
+wordpress_owner_group: root

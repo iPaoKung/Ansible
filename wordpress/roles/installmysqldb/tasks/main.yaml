@@ -1,0 +1,9 @@
+---
+  - name: Install MySQL
+    become: yes
+    apt:
+#      name: php5
+      name: "{{ item }}"
+    with_items: 
+        - python-mysqldb
+        - mysql-server

@@ -1,0 +1,8 @@
+---
+  - name : Copy file config from remote to ansible server
+    copy:    
+     src: /Users/ipao/Ansible/wordpress/roles/restorefile/templates/wp-config.php.j2
+     dest: /var/www/html/wordpress/wp-config.php
+     owner: "{{ wordpress_owner_user }}"
+     group: "{{ wordpress_owner_group }}"
+     mode: 0664

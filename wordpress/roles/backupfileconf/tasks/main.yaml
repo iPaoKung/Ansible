@@ -1,0 +1,6 @@
+---
+  - name : Copy file config from remote to ansible server
+    fetch:
+     src: /var/www/html/wordpress/wp-config.php
+     dest: ./files/wp-config.php
+     flat: yes #none structure folder

@@ -1,9 +1,21 @@
 ---
-- name: Install WordPress
-  hosts: MyServer
-  become: yes
-  tasks:
-    - name: Hello World
-      command: echo "Hello World"
-  roles:
-    - wordpress
+  - name: Install Wordpress
+    hosts: wordpress
+    pre_tasks:
+       - name: apt-get update
+         become: yes
+         apt:
+            update_cache: yes         
+    tasks:
+       - shell: echo '<?php phpinfo(); ?>' > /var/www/html/phpinfo.php
+       - name: Hello World tasks
+         command: echo "Hello World"
+    roles:
+      - installphp5
+      - installmysqldb
+      - createdb
+      - installwordpress
+#      - backupdb
+#      - backupfileconf
+      - restorefile
+      - restoredb

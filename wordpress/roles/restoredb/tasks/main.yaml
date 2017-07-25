@@ -1,0 +1,13 @@
+---
+  - name: Copy file config from remote to ansible server
+    copy:
+     src: ./files/wordpress.sql
+     dest: /tmp/wordpress.sql
+     owner: root
+     group: root
+     mode: 0664
+  - name: restore db
+    mysql_db:
+      state: import
+      name: all
+      target: /tmp/wordpress.sql
