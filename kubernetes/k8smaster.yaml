@@ -4,3 +4,7 @@
   tasks:
   - name: Hello World
     command: echo "Hello World"
+  - name: All Update with kernel
+    yum:
+      name: '*'
+      state: latest
