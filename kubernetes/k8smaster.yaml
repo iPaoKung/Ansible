@@ -4,7 +4,68 @@
   tasks:
   - name: Hello World
     command: echo "Hello World"
+
   - name: All Update with kernel
     yum:
       name: '*'
       state: latest
+
+## Install Basic software
+  - name: Install Netool
+    yum:
+      name: net-tools
+      state: latest
+  - name: Install WGET
+    yum:
+      name: wget
+      state: latest
+  - name: Install TELNET
+    yum:
+      name: telnet
+      state: latest
+## Install Pre-Docker
+  - name: Install Dependencies for Docker
+    yum:
+      name: yum-utils
+      state: latest
+  - name: Install Dependencies for Docker
+    yum:
+      name: device-mapper-persistent-data
+      state: latest
+  - name: Install Dependencies for Docker
+    yum:
+      name: lvm2
+      state: latest
+
+## Install Docker Version 17.03
+  - name: Install Repo Docker
+    shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - name: Install Docker version 17.03
+    shell: yum install -y --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos docker-ce-selinux-17.03.1.ce-1.el7.centos
+
+## Disable Swap    
+  - name: Disable Swap
+    command: swapoff -a
+    ignore_errors: true
+    changed_when: false
+
+  - name: Disable swap when reboot server
+    lineinfile:
+      path: /etc/fstab
+      regexp: '^/dev/mapper/centos-swap'
+      # insertbefore: '^#/dev/mapper/centos-swap'
+      line: '#/dev/mapper/centos-swap swap                    swap    defaults        0 0'
+
+  - name: Enable br_netfilter
+    command: modprobe br_netfilter
+    ignore_errors: true
+    changed_when: false
+    
+  - name: Set SELinux in permissive mode until the machine is rebooted
+    command: setenforce 0
+    ignore_errors: true
+    changed_when: false
+
+  - name: Disable policy and state of SELinux
+    selinux:
+      state: disabled
