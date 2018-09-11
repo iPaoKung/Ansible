@@ -1,0 +1,6 @@
+---
+- name: Install Kubenetes Master
+  hosts: k8smaster
+  tasks:
+  - name: Hello World
+    command: echo "Hello World"
