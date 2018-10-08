@@ -1,6 +1,6 @@
 ---
 - name: Install Kubenetes Master
-  hosts: k8smaster
+  hosts: k8snode
   tasks:
   - name: Hello World
     command: echo "Hello World"
@@ -11,37 +11,44 @@
       state: latest
 
 ## Install Basic software
-  - name: Install Netool
+  - name: Install Basic Packages
     yum:
-      name: net-tools
+      name: "{{ packages }}"
       state: latest
-  - name: Install WGET
-    yum:
-      name: wget
-      state: latest
-  - name: Install TELNET
-    yum:
-      name: telnet
-      state: latest
+    vars:
+        packages:
+          - net-tools
+          - wget
+          - telnet
 ## Install Pre-Docker
+
   - name: Install Dependencies for Docker
     yum:
-      name: yum-utils
+      name: "{{ packages }}"
       state: latest
-  - name: Install Dependencies for Docker
-    yum:
-      name: device-mapper-persistent-data
-      state: latest
-  - name: Install Dependencies for Docker
-    yum:
-      name: lvm2
-      state: latest
+    vars:
+        packages:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
 
 ## Install Docker Version 17.03
+  # - name: Add repository
+  #   yum_repository:
+  #     name: docker
+  #     description: Docker repository
+  #     baseurl: https://download.docker.com/linux/centos/docker-ce.repo
   - name: Install Repo Docker
     shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   - name: Install Docker version 17.03
     shell: yum install -y --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos docker-ce-selinux-17.03.1.ce-1.el7.centos
+    ignore_errors: true
+    changed_when: false
+  - name: Enable Service Docker
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
 
 ## Disable Swap    
   - name: Disable Swap
@@ -69,3 +76,42 @@
   - name: Disable policy and state of SELinux
     selinux:
       state: disabled
+## Install Kubernetes
+  - name: Create Repo K8S
+    copy:
+      src: /Users/l3uster/Ansible/kubernetes/files/k8srepo.repo
+      dest: /etc/yum.repos.d/kubernetes.repo
+
+  - name: Install Kubernetes Packages
+    yum:
+      name: "{{ packages }}"
+      state: latest
+    vars:
+        packages:
+          - kubelet
+          - kubeadm
+          - kubectl
+
+## Install Kubernetes Network
+  - name: Creates directory
+    file: path=./.kube/netconf state=directory
+
+  - name: Create Kubernetes Network Config
+    copy:
+      src: /Users/l3uster/Ansible/kubernetes/files/cni.yaml
+      dest: ./.kube/netconf/cni.yaml
+      
+  - name: Set bridge-nf-call-iptables
+    lineinfile:
+      path: /etc/sysctl.conf
+      regexp: 'net.bridge.bridge-nf-call-iptables = 1'
+      line: 'net.bridge.bridge-nf-call-iptables = 1'
+      state: present
+      # vars:
+      #   packages:
+      #     - 'net.bridge.bridge-nf-call-ip6tables = 1'
+      #     - 'net.bridge.bridge-nf-call-iptables = 1'
+      # backup: yes
+## Reboot Server   
+  - name: Reboot Server
+    command: init 6
