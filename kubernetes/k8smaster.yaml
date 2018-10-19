@@ -91,6 +91,11 @@
           - kubelet
           - kubeadm
           - kubectl
+  - name: Enable Service Kubernetes
+    systemd:
+      name: kubelet
+      state: started
+      enabled: yes
 
 ## Install Kubernetes Network
   - name: Creates directory
@@ -112,6 +117,16 @@
       #     - 'net.bridge.bridge-nf-call-ip6tables = 1'
       #     - 'net.bridge.bridge-nf-call-iptables = 1'
       # backup: yes
+## Install helm
+  - name: Install Helm
+    shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+
+## Disable firewalld
+  - name: Disable firewalld
+    systemd:
+      name: firewalld
+      state: stopped
+      enabled: no
 ## Reboot Server   
-  - name: Reboot Server
-    command: init 6
+  # - name: Reboot Server
+  #   command: init 6
